@@ -1,31 +1,31 @@
-#fastapi hello world
+#Python
+from typing import Optional
 
+#Pydantic
+from pydantic import BaseModel
+
+#FastAPI
 from fastapi import FastAPI
+from fastapi import Body
 
 app = FastAPI()
+
+# Models
+class Person(BaseModel):
+    first_name: str
+    last_name: str
+    age: int
+    hair_color: Optional[str] = None
+    is_married: Optional[bool] = None
 
 @app.get('/')
 def hello_world():
     return {'message': 'Hello World'}
 
-@app.get('/tweets/{tweet_id}')
-def get_tweet(tweet_id='unknown_id_value'):
-    data = {
-        "tweet_id": tweet_id,
-        "content": f"This is data from tweet {tweet_id}"
-    }
-    return data
-
-@app.put('/user/{user_id}/details?name=no_dado&age=no_dado')
-def user_data(user_id, name='no_dado', age='no_dado'):
-    data = {
-        "user_id": user_id
-    }
-    if name != 'no_dado':
-        data["name"] = name
-    if age != 'no_dado':
-        data["age"] = age
-    return data
+# Requests and Responses Body
+@app.post('/person/new')
+def create_person(person: Person = Body(...)): # '...' indicates that a parameter is obligatory
+    return person
 
 # Run the application
 # $ uvicorn main:app --reload
