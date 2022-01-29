@@ -6,8 +6,7 @@ from pydantic import BaseModel
 
 #FastAPI
 from fastapi import FastAPI
-from fastapi import Body
-from fastapi import Query
+from fastapi import Body, Query, Path
 
 app = FastAPI()
 
@@ -31,12 +30,35 @@ def create_person(person: Person = Body(...)): # '...' indicates that a paramete
 # Validaciones: Query params
 @app.get('/person/detail')
 def show_person(
-    name: Optional[str] = Query(None, 
-    min_length = 1, max_length = 50),
-    age: str = Query(...)):
+    name: Optional[str] = Query(
+        None,
+        min_length = 1,
+        max_length = 50,
+        title = 'Person name',
+        description = "This is de person name. It's between 1 and 50 characters long",
+    ),
+    age: str = Query(
+        ...,
+        title = 'Person age',
+        description = 'This is the person age',
+    )
+):
     # Mala practica que un query param sea obligatorio
     # Es recomenable que un path param si es obligatorio
     return {'name': name, 'age': age}
+
+
+# Validaciones: Path params
+@app.get('/person/detail/{person_id}')
+def show_person(
+    person_id: int = Path(
+        ...,
+        gt = 0,
+        title = 'Person id',
+        description = 'This is the person id',
+    )
+):
+    return {person_id: f'The person wiht {person_id} id exists'}
 
 
 
