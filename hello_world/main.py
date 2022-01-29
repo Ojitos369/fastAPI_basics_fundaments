@@ -1,10 +1,11 @@
 #Python
+from operator import eq
 from typing import Optional
 from enum import Enum
 
 #Pydantic
 from pydantic import BaseModel
-from pydantic import Field
+from pydantic import Field, HttpUrl, EmailStr
 
 #FastAPI
 from fastapi import FastAPI
@@ -21,9 +22,21 @@ class HairColor(Enum):
     red = 'red'
 
 class Location(BaseModel):
-    city: str
-    state: str
-    country: str
+    city: str = Field(
+        ...,
+        min_length = 1,
+        max_length = 50
+    )
+    state: str = Field(
+        ...,
+        min_length = 1,
+        max_length = 50
+    )
+    country: str = Field(
+        ...,
+        min_length = 1,
+        max_length = 50
+    )
 
 class Person(BaseModel):
     first_name: str = Field(
@@ -41,12 +54,19 @@ class Person(BaseModel):
         gt = 0,
         le = 115
     )
+    email: EmailStr = Field(
+        ...
+    )
     hair_color: Optional[HairColor] = Field(
         default = None
     )
     is_married: Optional[bool] = Field(
         default = None
     )
+    page: Optional[HttpUrl] = Field(
+        default = None
+    )
+
 
 @app.get('/')
 def hello_world():
