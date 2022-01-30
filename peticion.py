@@ -78,3 +78,15 @@ if __name__ == '__main__':
     print('Update Person')
     update_person_petition()
     
+# Status Codes
+# 100 - Information
+# 200 - Ok
+#   Created - 201
+#   Accepted - 202
+#   No Content - 204
+#   Updated - 205
+# 300 - Redirecting
+# 400 - Client Error
+#   No Exists - 404
+#   Validation Error - 422
+# 500 - Internal Server Error
