@@ -47,7 +47,7 @@ class Location(BaseModel):
             }
         }
 
-class Person(BaseModel):
+class BasePerson(BaseModel):
     first_name: str = Field(
         ...,
         min_length = 1,
@@ -97,6 +97,17 @@ class Person(BaseModel):
         } """
 
 
+class Person(BasePerson):
+    password: str = Field(
+        ...,
+        min_length = 8,
+        example = "12345678"
+    )
+    
+class PersonOut(BasePerson):
+    pass
+
+
 # Person Example
 """
 person = {
@@ -117,7 +128,7 @@ def hello_world():
     # requests.get('localhost:8000/')
 
 # Requests and Responses Body
-@app.post('/person/new')
+@app.post('/person/new', response_model = PersonOut)
 def create_person(person: Person = Body(...)): # '...' indicates that a parameter is obligatory
     return person
     # Requests Example

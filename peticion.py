@@ -6,6 +6,7 @@ person = {
     "last_name": "Doe",
     "age": 25,
     "email": "john@doe.com",
+    "password": "12345678",
     "hair_color": "brown",
     "is_married": True,
     "page": "https://john.doe.com"
