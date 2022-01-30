@@ -132,11 +132,13 @@ def show_person(
         max_length = 50,
         title = 'Person name',
         description = "This is de person name. It's between 1 and 50 characters long",
+        example = 'John Doe'
     ),
-    age: str = Query(
+    age: int = Query(
         ...,
         title = 'Person age',
         description = 'This is the person age',
+        example = 25
     )
 ):
     # Mala practica que un query param sea obligatorio
@@ -154,6 +156,7 @@ def show_person(
         gt = 0,
         title = 'Person id',
         description = 'This is the person id',
+        example = 21
     )
 ):
     return {person_id: f'The person wiht {person_id} id exists'}
@@ -168,7 +171,8 @@ def update_person(
         ...,
         gt = 0,
         title = 'Person id',
-        description = 'This is the person id'
+        description = 'This is the person id',
+        example = 21
     ),
     person: Person = Body(
         ...,
