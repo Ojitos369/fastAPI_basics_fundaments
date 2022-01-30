@@ -10,7 +10,7 @@ from pydantic import Field, HttpUrl, EmailStr
 #FastAPI
 from fastapi import FastAPI
 from fastapi import status
-from fastapi import Body, Query, Path
+from fastapi import Body, Query, Path, Form
 
 app = FastAPI()
 
@@ -108,6 +108,16 @@ class Person(BasePerson):
 class PersonOut(BasePerson):
     pass
 
+class LoginOut(BaseModel):
+    username: str = Field(
+        ...,
+        max_length = 20,
+        example = 'ojitos369'
+    )
+    message: str = Field(
+        default = 'Login successful'
+    )
+
 
 # Person Example
 """
@@ -130,6 +140,7 @@ def hello_world():
     # Requests Example
     # requests.get('localhost:8000/')
 
+
 # Requests and Responses Body
 @app.post(path = '/person/new',
     response_model = PersonOut,
@@ -139,6 +150,7 @@ def create_person(person: Person = Body(...)): # '...' indicates that a paramete
     return person
     # Requests Example
     # requests.post('localhost:8000/person/new', json = global person)
+
 
 # Validaciones: Query params
 @app.get(path = '/person/detail',
@@ -210,6 +222,21 @@ def update_person(
     # Requests Example
     # requests.put(f'http://localhost:8000/person/{person_id}', json = global person)
 
+
+@app.post(path = '/login',
+    response_model = LoginOut,
+    status_code = status.HTTP_200_OK
+)
+def login(
+    username: str = Form(
+        ...
+    ),
+    password: str = Form(
+        ...
+    )
+    
+):
+    return LoginOut(username = username)
 
 
 # max_length = max length of the string
