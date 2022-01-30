@@ -38,44 +38,90 @@ class Location(BaseModel):
         max_length = 50
     )
 
+    class Config:
+        schema_extra = {
+            "example": {
+                "city": "CDMX",
+                "state": "CDMX",
+                "country": "Mexico"
+            }
+        }
+
 class Person(BaseModel):
     first_name: str = Field(
         ...,
         min_length = 1,
         max_length = 50,
+        example = 'John'
     )
     last_name: str = Field(
         ...,
         min_length = 1,
         max_length = 50,
+        example = 'Doe'
     )
     age: int = Field(
         ...,
         gt = 0,
-        le = 115
+        le = 115,
+        example = 25
     )
     email: EmailStr = Field(
-        ...
+        ...,
+        example = "john@doe.com"
     )
     hair_color: Optional[HairColor] = Field(
-        default = None
+        default = None,
+        example = HairColor.brown
     )
     is_married: Optional[bool] = Field(
-        default = None
+        default = None,
+        example = True
     )
     page: Optional[HttpUrl] = Field(
-        default = None
+        default = None,
+        example = "https://john.doe.com"
     )
+    
+    """ class Config:
+        schema_extra = {
+            "example": {
+                "first_name": "John",
+                "last_name": "Doe",
+                "age": 25,
+                "email": "john@doe.com",
+                "hair_color": HairColor.brown,
+                "is_married": True,
+                "page": "https://www.john.doe.com"
+            }
+        } """
 
+
+# Person Example
+"""
+"person": {
+    "first_name": "John",
+    "last_name": "Doe",
+    "age": 25,
+    "email": "john@doe.com",
+    "hair_color": HairColor.brown,
+    "is_married": True,
+    "page": "https://www.john.doe.com"
+}
+"""
 
 @app.get('/')
 def hello_world():
     return {'message': 'Hello World'}
+    # Requests Example
+    # requests.get('localhost:8000/')
 
 # Requests and Responses Body
 @app.post('/person/new')
 def create_person(person: Person = Body(...)): # '...' indicates that a parameter is obligatory
     return person
+    # Requests Example
+    # requests.post('localhost:8000/person/new', json = global person)
 
 # Validaciones: Query params
 @app.get('/person/detail')
@@ -96,6 +142,8 @@ def show_person(
     # Mala practica que un query param sea obligatorio
     # Es recomenable que un path param si es obligatorio
     return {'name': name, 'age': age}
+    # Requests Example
+    # requests.get('localhost:8000/person/detail?name=John&age=25')
 
 
 # Validaciones: Path params
@@ -109,6 +157,8 @@ def show_person(
     )
 ):
     return {person_id: f'The person wiht {person_id} id exists'}
+    # Requests Example
+    # requests.get('http://localhost:8000/person/detail/1')
 
 
 # Validaciones: Request Body
@@ -130,6 +180,8 @@ def update_person(
     results = person.dict()
     results.update(location.dict())
     return results
+    # Requests Example
+    # requests.put(f'http://localhost:8000/person/{person_id}', json = global person)
 
 
 
