@@ -11,7 +11,7 @@ from pydantic import Field, HttpUrl, EmailStr
 #FastAPI
 from fastapi import FastAPI
 from fastapi import status
-from fastapi import Body, Query, Path, Form, Header, Cookie
+from fastapi import Body, Query, Path, Form, Header, Cookie, UploadFile, File
 
 app = FastAPI()
 
@@ -268,38 +268,65 @@ def contact(
     return user_agent
 
 
+# Files
+@app.post(path = '/post-image',
+    status_code = status.HTTP_200_OK
+)
+def post_image(
+    image: UploadFile = File(...)
+):
+    file = {
+        "filename": image.filename,
+        "format": image.content_type,
+        "size(kb)": round(len(image.file.read())/1024, ndigits=2)
+    }
+    # save file
+    with open(f'./files/{image.filename}', 'wb') as f:
+        f.write(image.file.read())
+    return file
+
+"""
+max_length = max length of the string
+min_length = min length of the string
+regex = regular expression to validate the string
+ge = greater or equal than
+le = less or equal than
+gt = greater than
+lt = less than
+title = title of the parameter
+description = description of the parameter
+"""
+
+"""
+Validaciones: Pydantic
+Clasicos:
+  str
+  int
+  float
+  bool
+Excoticos:
+  Enum
+  HttpUrl
+  FilePath
+  DirectoryPath
+  EmailStr
+  PaymentCardNumber
+  IPvAnyAddress
+  NegativeFloat
+  PositiveFloat
+  NegativeInt
+  PositiveInt
+"""
 
 
-
-# max_length = max length of the string
-# min_length = min length of the string
-# regex = regular expression to validate the string
-# ge = greater or equal than
-# le = less or equal than
-# gt = greater than
-# lt = less than
-# title = title of the parameter
-# description = description of the parameter
-
-
-# Validaciones: Pydantic
-# Clasicos:
-#   str
-#   int
-#   float
-#   bool
-# Excoticos:
-#   Enum
-#   HttpUrl
-#   FilePath
-#   DirectoryPath
-#   EmailStr
-#   PaymentCardNumber
-#   IPvAnyAddress
-#   NegativeFloat
-#   PositiveFloat
-#   NegativeInt
-#   PositiveInt
+"""
+Files
+* File
+* UploadFile
+    -> filename
+    -> content_type (jpg, mp4, gif, etc)
+    -> file
+"""
 
 # Run the application
 # $ uvicorn main:app --reload
