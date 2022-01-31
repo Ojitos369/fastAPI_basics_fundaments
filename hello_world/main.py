@@ -178,7 +178,8 @@ def create_person(person: Person = Body(...)): # '...' indicates that a paramete
 @app.get(path = '/person/detail',
     status_code = status.HTTP_200_OK,
     tags = ["Persons"],
-    summary = "Show Same Persons"
+    summary = "Show Same Persons",
+    deprecated = True
 )
 def show_person(
     name: Optional[str] = Query(
@@ -463,4 +464,4 @@ Files
 # $ uvicorn main:app --reload
 
 
-# Deprecar <- Depricated = Descontinuado
+# Deprecar <- Depricate = Descontinuado
