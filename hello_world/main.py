@@ -1,6 +1,4 @@
 #Python
-from lib2to3.pgen2.token import OP
-from operator import eq
 from typing import Optional
 from enum import Enum
 
@@ -11,6 +9,7 @@ from pydantic import Field, HttpUrl, EmailStr
 #FastAPI
 from fastapi import FastAPI
 from fastapi import status
+from fastapi import HTTPException
 from fastapi import Body, Query, Path, Form, Header, Cookie, UploadFile, File
 
 app = FastAPI()
@@ -180,6 +179,8 @@ def show_person(
     # requests.get('localhost:8000/person/detail?name=John&age=25')
 
 
+persons_id = [1, 2, 3, 4, 5]
+
 # Validaciones: Path params
 @app.get(path = '/person/detail/{person_id}',
     status_code = status.HTTP_200_OK
@@ -190,10 +191,16 @@ def show_person(
         gt = 0,
         title = 'Person id',
         description = 'This is the person id',
-        example = 21
+        example = 3
     )
 ):
-    return {person_id: f'The person wiht {person_id} id exists'}
+    if person_id not in persons_id:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = 'Person not found'
+        )
+    else:
+        return {person_id: f'The person wiht {person_id} id exists'}
     # Requests Example
     # requests.get('http://localhost:8000/person/detail/1')
 
