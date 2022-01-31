@@ -133,7 +133,8 @@ person = {
 """
 
 @app.get(path = '/',
-    status_code = status.HTTP_200_OK
+    status_code = status.HTTP_200_OK,
+    tags = ["Pages", "Home"]
 )
 def hello_world():
     return {'message': 'Hello World'}
@@ -144,7 +145,8 @@ def hello_world():
 # Requests and Responses Body
 @app.post(path = '/person/new',
     response_model = PersonOut,
-    status_code = status.HTTP_201_CREATED
+    status_code = status.HTTP_201_CREATED,
+    tags = ["Persons"]
 )
 def create_person(person: Person = Body(...)): # '...' indicates that a parameter is obligatory
     return person
@@ -154,7 +156,8 @@ def create_person(person: Person = Body(...)): # '...' indicates that a paramete
 
 # Validaciones: Query params
 @app.get(path = '/person/detail',
-    status_code = status.HTTP_200_OK
+    status_code = status.HTTP_200_OK,
+    tags = ["Persons"]
 )
 def show_person(
     name: Optional[str] = Query(
@@ -183,7 +186,8 @@ persons_id = [1, 2, 3, 4, 5]
 
 # Validaciones: Path params
 @app.get(path = '/person/detail/{person_id}',
-    status_code = status.HTTP_200_OK
+    status_code = status.HTTP_200_OK,
+    tags = ["Persons"]
 )
 def show_person(
     person_id: int = Path(
@@ -207,7 +211,8 @@ def show_person(
 
 # Validaciones: Request Body
 @app.put(path = '/person/{person_id}',
-    status_code = status.HTTP_200_OK
+    status_code = status.HTTP_200_OK,
+    tags = ["Persons"]
 )
 def update_person(
     person_id: int = Path(
@@ -234,7 +239,8 @@ def update_person(
 # Forms
 @app.post(path = '/login',
     response_model = LoginOut,
-    status_code = status.HTTP_200_OK
+    status_code = status.HTTP_200_OK,
+    tags = ["Persons", "Pages"]
 )
 def login(
     username: str = Form(
@@ -250,7 +256,8 @@ def login(
 
 # Cookies and Headers Params
 @app.post(path = '/contact',
-    status_code = status.HTTP_200_OK
+    status_code = status.HTTP_200_OK,
+    tags = ["Pages", "Contact"]
 )
 def contact(
     first_name: str = Form(
@@ -277,7 +284,8 @@ def contact(
 
 # Files
 @app.post(path = '/post-image',
-    status_code = status.HTTP_200_OK
+    status_code = status.HTTP_200_OK,
+    tags = ["Pages", "Files"]
 )
 def post_image(
     image: UploadFile = File(...)
