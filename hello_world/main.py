@@ -1,4 +1,5 @@
 #Python
+from lib2to3.pgen2.token import OP
 from operator import eq
 from typing import Optional
 from enum import Enum
@@ -10,7 +11,7 @@ from pydantic import Field, HttpUrl, EmailStr
 #FastAPI
 from fastapi import FastAPI
 from fastapi import status
-from fastapi import Body, Query, Path, Form
+from fastapi import Body, Query, Path, Form, Header, Cookie
 
 app = FastAPI()
 
@@ -223,6 +224,7 @@ def update_person(
     # requests.put(f'http://localhost:8000/person/{person_id}', json = global person)
 
 
+# Forms
 @app.post(path = '/login',
     response_model = LoginOut,
     status_code = status.HTTP_200_OK
@@ -237,6 +239,36 @@ def login(
     
 ):
     return LoginOut(username = username)
+
+
+# Cookies and Headers Params
+@app.post(path = '/contact',
+    status_code = status.HTTP_200_OK
+)
+def contact(
+    first_name: str = Form(
+        ...,
+        max_length = 20,
+        min_length = 1
+    ),
+    last_name: str = Form(
+        ...,
+        max_length = 20,
+        min_length = 1
+    ),
+    email: EmailStr = Form(...),
+    message: str = Form(
+        ...,
+        min_length = 20,
+        example = "aqui va un mensaje de al menos 20 caracteres"
+    ),
+    user_agent: Optional[str] = Header(default = None),
+    ads: Optional[str] = Cookie(default = None)
+):
+    return user_agent
+
+
+
 
 
 # max_length = max length of the string
